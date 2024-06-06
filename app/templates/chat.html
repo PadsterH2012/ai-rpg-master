@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RPG Chat</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+</head>
+<body>
+    <div class="status-container">
+        <div id="status-indicator" class="status-indicator green"></div>
+    </div>
+    <div class="chat-container">
+        <div class="chat-box" id="chat-box">
+            <div id="chat">
+                {% for conversation in conversations %}
+                <div class="message user-message">
+                    <div class="avatar"></div>
+                    <div class="bubble">
+                        <span>{{ conversation.user_message }}</span>
+                        <span class="timestamp">{{ conversation.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    </div>
+                </div>
+                <div class="message ai-message">
+                    <div class="avatar"></div>
+                    <div class="bubble">
+                        <div class="agent-name">Agent</div>
+                        <span>{{ conversation.ollama_response }}</span>
+                        <span class="timestamp">{{ conversation.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</span>
+                    </div>
+                </div>
+                {% endfor %}
+                <div id="waiting-message" class="waiting-message" style="display: none;">Waiting for Ollama's response...</div>
+            </div>
+        </div>
+    </div>
+    <div class="footer">
+        <input type="text" id="message-input" placeholder="Type your message here...">
+        <button id="send-button">Send</button>
+    </div>
+
+    <script>
+        const socket = io();
+        const messageInput = document.getElementById('message-input');
+        const sendButton = document.getElementById('send-button');
+        const chat = document.getElementById('chat');
+        const waitingMessage = document.getElementById('waiting-message');
+        const statusIndicator = document.getElementById('status-indicator');
+        const chatBox = document.getElementById('chat-box');
+
+        function addMessage(userMessage, ollamaResponse, timestamp) {
+            const userMessageDiv = document.createElement('div');
+            userMessageDiv.classList.add('message', 'user-message');
+            
+            const avatarDiv = document.createElement('div');
+            avatarDiv.classList.add('avatar');
+
+            const bubbleDiv = document.createElement('div');
+            bubbleDiv.classList.add('bubble');
+
+            const userMessageSpan = document.createElement('span');
+            userMessageSpan.textContent = userMessage;
+            
+            const timestampSpan = document.createElement('span');
+            timestampSpan.classList.add('timestamp');
+            timestampSpan.textContent = timestamp;
+
+            bubbleDiv.appendChild(userMessageSpan);
+            bubbleDiv.appendChild(timestampSpan);
+
+            userMessageDiv.appendChild(avatarDiv);
+            userMessageDiv.appendChild(bubbleDiv);
+            chat.appendChild(userMessageDiv);
+
+            if (ollamaResponse) {
+                const aiMessageDiv = document.createElement('div');
+                aiMessageDiv.classList.add('message', 'ai-message');
+                
+                const avatarDiv = document.createElement('div');
+                avatarDiv.classList.add('avatar');
+
+                const bubbleDiv = document.createElement('div');
+                bubbleDiv.classList.add('bubble');
+
+                const agentNameDiv = document.createElement('div');
+                agentNameDiv.classList.add('agent-name');
+                agentNameDiv.textContent = 'Agent';  // Replace with actual agent name if available
+
+                const aiMessageSpan = document.createElement('span');
+                aiMessageSpan.innerHTML = ollamaResponse.replace(/\n/g, '<br>');
+
+                const timestampSpanClone = timestampSpan.cloneNode(true);
+
+                bubbleDiv.appendChild(agentNameDiv);
+                bubbleDiv.appendChild(aiMessageSpan);
+                bubbleDiv.appendChild(timestampSpanClone);
+
+                aiMessageDiv.appendChild(avatarDiv);
+                aiMessageDiv.appendChild(bubbleDiv);
+                chat.appendChild(aiMessageDiv);
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
+        }
+
+        function setStatusIndicator(status) {
+            statusIndicator.className = `status-indicator ${status}`;
+        }
+
+        sendButton.addEventListener('click', () => {
+            const message = messageInput.value;
+            if (message.trim() !== '') {
+                socket.emit('message', { data: message });
+                addMessage(message, 'Waiting for Ollama\'s response...', new Date().toISOString());
+                setStatusIndicator('amber');
+                messageInput.value = '';
+            }
+        });
+
+        socket.on('response', (data) => {
+            if (data.error) {
+                console.error('Error:', data.error);
+            } else {
+                addMessage(data.user_message, data.ollama_response, data.timestamp);
+            }
+            setStatusIndicator('green');
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+
+        socket.on('connect_error', () => {
+            setStatusIndicator('red');
+        });
+
+        socket.on('disconnect', () => {
+            setStatusIndicator('red');
+        });
+
+        setStatusIndicator('green');
+    </script>
+</body>
+</html>
