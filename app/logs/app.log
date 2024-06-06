@@ -205,3 +205,5 @@ What will happen next? Will Lyra be able to break the spell and free her friends
 2024-06-06 15:26:02,374 INFO: Database URI: sqlite:////mnt/local_repository/ai-rpg-master/app/instance/chat.db [in /mnt/local_repository/ai-rpg-master/app/__init__.py:43]
 2024-06-06 15:31:05,777 INFO: Database URI: sqlite:////mnt/local_repository/ai-rpg-master/app/instance/chat.db [in /mnt/local_repository/ai-rpg-master/app/__init__.py:43]
 2024-06-06 15:31:14,258 INFO: Database URI: sqlite:////mnt/local_repository/ai-rpg-master/app/instance/chat.db [in /mnt/local_repository/ai-rpg-master/app/__init__.py:43]
+2024-06-06 18:34:45,855 INFO: Database URI: sqlite:////mnt/local_repository/ai-rpg-master/app/instance/chat.db [in /mnt/local_repository/ai-rpg-master/app/__init__.py:43]
+2024-06-06 18:34:46,198 INFO: Database URI: sqlite:////mnt/local_repository/ai-rpg-master/app/instance/chat.db [in /mnt/local_repository/ai-rpg-master/app/__init__.py:43]
