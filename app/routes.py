@@ -1,5 +1,5 @@
 from flask import Blueprint, render_template, request, jsonify, current_app as app
-from app.models import Conversation, db
+from app.models import Conversation, db, Player
 from app.utils import player_interaction_agent
 from datetime import datetime
 
@@ -8,7 +8,8 @@ main = Blueprint('main', __name__)
 @main.route('/')
 def home():
     conversations = Conversation.query.order_by(Conversation.timestamp.asc()).all()
-    return render_template('chat.html', conversations=conversations)
+    player = Player.query.first()
+    return render_template('chat.html', conversations=conversations, player=player)
 
 @main.route('/send_message', methods=['POST'])
 def send_message():
@@ -22,10 +23,12 @@ def send_message():
         db.session.commit()
         app.logger.info(f"User message saved: {user_message}")
 
+        # Get responses from the agents
         overseer_response, story_update = player_interaction_agent(user_message)
         app.logger.info(f"Overseer response: {overseer_response}")
         app.logger.info(f"Story update: {story_update}")
 
+        # Save responses to the database
         new_conversation.ollama_response = overseer_response
         db.session.add(new_conversation)
         db.session.commit()

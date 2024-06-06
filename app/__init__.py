@@ -46,10 +46,8 @@ def create_app():
     migrate.init_app(app, db)
     socketio.init_app(app)
 
-    from app.routes import main as main_blueprint
-    app.register_blueprint(main_blueprint)
-
-    from app.sockets import socketio as socketio_blueprint
-    socketio.init_app(app)
+    with app.app_context():
+        from app.routes import main as main_blueprint
+        app.register_blueprint(main_blueprint)
 
     return app
