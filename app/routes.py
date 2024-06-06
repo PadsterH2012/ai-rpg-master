@@ -1,3 +1,5 @@
+import os
+
 from flask import Blueprint, render_template, request, jsonify, current_app as app
 from app.models import Conversation, db, Player
 from app.utils import player_interaction_agent
@@ -61,3 +63,12 @@ def full_conversation():
         } for conv in conversations
     ]
     return jsonify({'conversations': conversations_data})
+
+@app.route('/logs')
+def get_logs():
+    log_file = os.path.join(app.instance_path, 'app.log')
+    logs = []
+    if os.path.exists(log_file):
+        with open(log_file, 'r') as f:
+            logs = f.readlines()
+    return jsonify(logs=logs)

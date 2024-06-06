@@ -165,3 +165,13 @@ body {
     display: flex;
     flex-direction: column;
 }
+
+#debug-log {
+    height: 100px; /* Adjusted height for the debug log container */
+    background-color: #1e1e1e;
+    color: white;
+    overflow-y: auto;
+    padding: 10px;
+    box-sizing: border-box;
+    border-top: 1px solid #444;
+}
