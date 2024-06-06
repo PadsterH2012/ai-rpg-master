@@ -10,7 +10,8 @@ body {
 .chat-container {
     display: flex;
     flex-direction: row;
-    height: 100vh;
+    height: 80vh; /* Adjusted to 80% of the viewport height */
+    margin: auto;
 }
 
 .chat-box {
@@ -72,6 +73,8 @@ body {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
+    display: flex;
+    flex-direction: column;
 }
 
 .footer {
@@ -143,11 +146,21 @@ body {
     color: #d1d1d1;
 }
 
+#gpu-load {
+    height: 100px; /* Adjusted height for GPU load container */
+    width: 100%;
+    background-color: #333;
+    color: white;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
 #chat {
     flex: 1;
     padding: 20px;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
-    height: 80vh;
 }
