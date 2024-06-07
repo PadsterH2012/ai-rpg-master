@@ -1,5 +1,6 @@
 import os
-
+import logging
+from logging.handlers import TimedRotatingFileHandler
 from flask import Blueprint, render_template, request, jsonify, current_app as app
 from app.models import Conversation, db, Player
 from app.utils import player_interaction_agent
@@ -66,9 +67,14 @@ def full_conversation():
 
 @main.route('/logs')
 def get_logs():
-    log_file = os.path.join(app.instance_path, 'app.log')
+    log_file = os.path.join(app.config['BASE_DIR'], 'instance', 'logs', 'app.log')
+    app.logger.info(f"Reading log file from path: {log_file}")
+    print(f"Reading log file from path: {log_file}")
     logs = []
     if os.path.exists(log_file):
         with open(log_file, 'r') as f:
             logs = f.readlines()
+    else:
+        app.logger.error(f"Log file does not exist: {log_file}")
+        print(f"Log file does not exist: {log_file}")
     return jsonify(logs=logs)
