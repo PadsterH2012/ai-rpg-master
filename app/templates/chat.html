@@ -31,46 +31,47 @@
                 {% endfor %}
                 <div id="waiting-message" class="waiting-message" style="display: none;">Waiting for Ollama's response...</div>
             </div>
-            <div class="footer">
-                <input type="text" id="message-input" placeholder="Type your message here...">
-                <button id="send-button">
-                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px">
-                        <path d="M0 0h24v24H0V0z" fill="none"/>
-                        <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z"/>
-                    </svg>
-                </button>
-            </div>
         </div>
         <div class="player-info">
             <div class="status-container">
                 <div id="status-indicator" class="status-indicator green"></div>
-                <div id="status-label">Waiting/Not Waiting</div>
+                <span>Waiting/Not Waiting</span>
             </div>
-            <div id="gpu-load">
-                GPU Load
+            <div class="gpu-load">
+                <span>GPU Load</span>
+                <canvas id="gpu-load-chart"></canvas>
             </div>
-            <h3>Player Info</h3>
-            <p><strong>Name:</strong> <span id="player-name">{{ player.name }}</span></p>
-            <p><strong>Age:</strong> <span id="player-age">{{ player.age }}</span></p>
-            <p><strong>Sex:</strong> <span id="player-sex">{{ player.sex }}</span></p>
-            <p><strong>Alignment:</strong> <span id="player-alignment">{{ player.alignment }}</span></p>
-            <p><strong>Class:</strong> <span id="player-class">{{ player.player_class }}</span></p>
-            <p><strong>Race:</strong> <span id="player-race">{{ player.race }}</span></p>
-            <p><strong>PP:</strong> <span id="player-pp">{{ player.pp }}</span></p>
-            <p><strong>GP:</strong> <span id="player-gp">{{ player.gp }}</span></p>
-            <p><strong>SP:</strong> <span id="player-sp">{{ player.sp }}</span></p>
-            <p><strong>CP:</strong> <span id="player-cp">{{ player.cp }}</span></p>
-            <p><strong>HP:</strong> <span id="player-hp">{{ player.hp }}</span></p>
-            <p><strong>XP:</strong> <span id="player-xp">{{ player.xp }}</span></p>
-            <p><strong>Level:</strong> <span id="player-level">{{ player.level }}</span></p>
-            <p><strong>Inventory:</strong> <span id="player-inventory">{{ player.inventory }}</span></p>
+            <div class="player-details">
+                <h3>Player Info</h3>
+                <p><strong>Name:</strong> <span id="player-name">{{ player.name }}</span></p>
+                <p><strong>Age:</strong> <span id="player-age">{{ player.age }}</span></p>
+                <p><strong>Sex:</strong> <span id="player-sex">{{ player.sex }}</span></p>
+                <p><strong>Alignment:</strong> <span id="player-alignment">{{ player.alignment }}</span></p>
+                <p><strong>Class:</strong> <span id="player-class">{{ player.player_class }}</span></p>
+                <p><strong>Race:</strong> <span id="player-race">{{ player.race }}</span></p>
+                <p><strong>PP:</strong> <span id="player-pp">{{ player.pp }}</span></p>
+                <p><strong>GP:</strong> <span id="player-gp">{{ player.gp }}</span></p>
+                <p><strong>SP:</strong> <span id="player-sp">{{ player.sp }}</span></p>
+                <p><strong>CP:</strong> <span id="player-cp">{{ player.cp }}</span></p>
+                <p><strong>HP:</strong> <span id="player-hp">{{ player.hp }}</span></p>
+                <p><strong>XP:</strong> <span id="player-xp">{{ player.xp }}</span></p>
+                <p><strong>Level:</strong> <span id="player-level">{{ player.level }}</span></p>
+                <p><strong>Inventory:</strong> <span id="player-inventory">{{ player.inventory }}</span></p>
+            </div>
         </div>
     </div>
-    <div id="debug-log">
+    <div class="footer">
+        <input type="text" id="message-input" placeholder="Type your message here...">
+        <button id="send-button">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white" width="24px" height="24px">
+                <path d="M0 0h24v24H0V0z" fill="none"/>
+                <path d="M2.01 21L23 12 2.01 3 2 10l15 2-15 2 .01 7z"/>
+            </svg>
+        </button>
+    </div>
+    <div class="debug-logs">
         <h3>Debug Logs</h3>
-        <div id="log-content">
-            <!-- Logs will be dynamically loaded here -->
-        </div>
+        <div id="log-content" class="log-content"></div>
     </div>
 </body>
 </html>

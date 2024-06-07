@@ -64,7 +64,7 @@ def full_conversation():
     ]
     return jsonify({'conversations': conversations_data})
 
-@app.route('/logs')
+@main.route('/logs')
 def get_logs():
     log_file = os.path.join(app.instance_path, 'app.log')
     logs = []
