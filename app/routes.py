@@ -67,7 +67,7 @@ def full_conversation():
 
 @main.route('/logs')
 def get_logs():
-    log_file = os.path.join(app.config['BASE_DIR'], 'instance', 'logs', 'app.log')
+    log_file = os.path.join(app.config['BASE_DIR'], 'logs', 'app.log')
     app.logger.info(f"Reading log file from path: {log_file}")
     print(f"Reading log file from path: {log_file}")
     logs = []

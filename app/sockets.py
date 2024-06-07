@@ -1,9 +1,9 @@
+import logging
 from flask_socketio import emit
 from app import socketio, db
 from app.models import Conversation
 from app.utils import player_interaction_agent
 from datetime import datetime
-import logging
 import threading
 import time
 import pynvml
@@ -11,8 +11,6 @@ import pynvml
 # Initialize NVML (NVIDIA Management Library)
 pynvml.nvmlInit()
 
-# Configure logging
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 @socketio.on('message')
@@ -26,7 +24,12 @@ def handle_message(msg):
         db.session.commit()
         logger.info(f"User message saved: {user_message}")
 
+        # Logging before making the request to Ollama API
+        logger.debug(f"Requesting response from Ollama for message: {user_message}")
+
         overseer_response, story_update = player_interaction_agent(user_message)
+        
+        # Logging after receiving the response from Ollama API
         logger.info(f"Overseer response: {overseer_response}")
         logger.info(f"Story update: {story_update}")
 
@@ -50,10 +53,12 @@ def handle_message(msg):
         logger.error(f"Error handling message: {e}")
         emit('response', {'error': 'An error occurred while processing your message.'})
 
+
 def fetch_gpu_load():
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
     while True:
         gpu_utilization = pynvml.nvmlDeviceGetUtilizationRates(handle).gpu
+        logger.debug(f"GPU Utilization: {gpu_utilization}")
         socketio.emit('gpu_load', {'gpu_load': gpu_utilization})
         time.sleep(5)
 

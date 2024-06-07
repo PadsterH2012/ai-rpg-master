@@ -7,6 +7,22 @@ from flask_migrate import Migrate
 from flask_socketio import SocketIO
 from app.config import Config
 
+# Configure logging
+logging.basicConfig(
+    level=logging.DEBUG,  # Set to DEBUG to capture all types of log messages
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s',
+    handlers=[
+        TimedRotatingFileHandler(
+            'app.log', 
+            when="midnight", 
+            interval=1
+        ),
+        logging.StreamHandler()
+    ]
+)
+logger = logging.getLogger(__name__)
+
+# Initialize extensions
 db = SQLAlchemy()
 migrate = Migrate()
 socketio = SocketIO()
@@ -20,25 +36,24 @@ def create_app():
     if not os.path.exists(instance_path):
         os.makedirs(instance_path)
 
-    # Configure logging
+    # Configure logging for Flask app
     log_dir = os.path.join(Config.BASE_DIR, 'logs')
     if not os.path.exists(log_dir):
         os.makedirs(log_dir)
-    
+
     handler = TimedRotatingFileHandler(
         os.path.join(log_dir, 'app.log'), 
         when="midnight", 
         interval=1
     )
     handler.suffix = "%Y-%m-%d"
-    handler.setLevel(logging.INFO)
+    handler.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
     formatter = logging.Formatter(
         '%(asctime)s %(levelname)s: %(message)s [in %(pathname)s:%(lineno)d]'
     )
     handler.setFormatter(formatter)
     app.logger.addHandler(handler)
-
-    app.logger.setLevel(logging.INFO)
+    app.logger.setLevel(logging.DEBUG)  # Set to DEBUG to capture all log levels
 
     app.logger.info(f"Database URI: {app.config['SQLALCHEMY_DATABASE_URI']}")
 

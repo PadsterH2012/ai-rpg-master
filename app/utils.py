@@ -1,9 +1,7 @@
 import requests
 import logging
-from app.config import Config
+from app.config import Config  # Adjust the import path if necessary
 
-# Configure logging
-logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 def get_ollama_response(message, agent="default"):
