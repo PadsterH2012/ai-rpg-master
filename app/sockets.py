@@ -15,6 +15,7 @@ logger = logging.getLogger(__name__)
 
 @socketio.on('message')
 def handle_message(msg):
+    logger.debug("handle_message called")
     user_message = msg['data']
     logger.info(f"Received user message: {user_message}")
     
@@ -52,7 +53,6 @@ def handle_message(msg):
         db.session.rollback()
         logger.error(f"Error handling message: {e}")
         emit('response', {'error': 'An error occurred while processing your message.'})
-
 
 def fetch_gpu_load():
     handle = pynvml.nvmlDeviceGetHandleByIndex(0)
